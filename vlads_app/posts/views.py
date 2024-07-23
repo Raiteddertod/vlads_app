@@ -1,22 +1,18 @@
+
 from django.shortcuts import render
 from django.http import JsonResponse, request
-#import requests 
-from django.views.decorators.csrf import csrf_exempt
-import json
+import requests
 
 # Вставьте ваш API-ключ
-api_key = ' AIzaSyDqyj5wC_na5ERaE-hy_7CLbF6SuKjS8Q4'
+api_key = 'AIzaSyDqyj5wC_na5ERaE-hy_7CLbF6SuKjS8Q4'
 
-
-@csrf_exempt
 def query(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
-            data = json.loads(request.body)
-            query = data.get('query')
+            query = request.GET.get('query')
 
             if not query:
-                return JsonResponse({'error': 'Query is required'}, status=400)
+                return JsonResponse({'error': 'Требуется запрос'}, status=400)
 
             response = requests.post(
                 'https://api.generativeai.googleapis.com/v1/generate',
@@ -35,11 +31,6 @@ def query(request):
 
             return JsonResponse(result)
         except requests.exceptions.RequestException as e:
-            print(f'Error: {e}')
+            print(f'Ошибка: {e}')
             return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-
-from django.shortcuts import render
-
-# Create your views here.
+    return JsonResponse({'error': 'Недопустимый метод запроса'}, status=400)
