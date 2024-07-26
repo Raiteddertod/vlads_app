@@ -1,6 +1,5 @@
-
 from django.shortcuts import render
-from django.http import JsonResponse, request
+from django.http import JsonResponse
 import requests
 
 # Вставьте ваш API-ключ
@@ -23,7 +22,8 @@ def query(request):
                 json={
                     'model': 'gemini-1.5-flash-latest',
                     'content': [{'text': query}]
-                }
+                },
+                verify=False  # Отключение проверки SSL-сертификатов
             )
 
             response.raise_for_status()
@@ -34,3 +34,4 @@ def query(request):
             print(f'Ошибка: {e}')
             return JsonResponse({'error': str(e)}, status=500)
     return JsonResponse({'error': 'Недопустимый метод запроса'}, status=400)
+
